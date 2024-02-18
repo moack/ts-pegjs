@@ -42,7 +42,7 @@
     "release": "npm test && npm publish"
   },
   "peerDependencies": {
-    "peggy": "^3.0.2"
+    "peggy": "^4.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.2.5",

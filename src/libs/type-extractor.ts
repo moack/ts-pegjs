@@ -229,7 +229,7 @@ export class TypeExtractor {
           }
           break;
         default: {
-          const _unused: never = type;
+          const _unused: string = type;
           console.warn('Did not handle renaming of Peggy node with type', type);
         }
       }
@@ -277,14 +277,32 @@ export class TypeExtractor {
    * the header (the parts between `{...}` at the start of a grammar)
    */
   #initSourceHeader() {
-    if (this.grammar.topLevelInitializer?.code) {
-      // Insert extra semicolons incase the code boundaries were ambiguous
-      this.sourceHeader +=
-        '\n;// Global Initializer\n' + this.grammar.topLevelInitializer.code + '\n;\n';
+    if (this.grammar.topLevelInitializer) {
+      if (Array.isArray(this.grammar.topLevelInitializer)) {
+        if (this.grammar.topLevelInitializer.length) {
+          // Insert extra semicolons incase the code boundaries were ambiguous
+          this.sourceHeader +=
+            '\n;// Global Initializer\n' + this.grammar.topLevelInitializer[0].code + '\n;\n';
+        }
+      } else {
+        if (this.grammar.topLevelInitializer?.code) {
+          // Insert extra semicolons incase the code boundaries were ambiguous
+          this.sourceHeader +=
+            '\n;// Global Initializer\n' + this.grammar.topLevelInitializer.code + '\n;\n';
+        }
+      }
     }
-    if (this.grammar.initializer?.code) {
-      // Insert extra semicolons incase the code boundaries were ambiguous
-      this.sourceHeader += '\n;// Initializer\n' + this.grammar.initializer.code + '\n;\n';
+
+    if (this.grammar.initializer) {
+      if (Array.isArray(this.grammar.initializer)) {
+        if (this.grammar.initializer.length) {
+          // Insert extra semicolons incase the code boundaries were ambiguous
+          this.sourceHeader += '\n;// Initializer\n' + this.grammar.initializer[0].code + '\n;\n';
+        }
+      } else if (this.grammar.initializer?.code) {
+        // Insert extra semicolons incase the code boundaries were ambiguous
+        this.sourceHeader += '\n;// Initializer\n' + this.grammar.initializer.code + '\n;\n';
+      }
     }
   }
 
@@ -343,7 +361,7 @@ export class TypeExtractor {
       case 'action':
         return this._getTypeForAction(expr);
     }
-    const unknownType: never = type;
+    const unknownType: string = type;
     console.warn('Peggy node of type', unknownType, 'is currently not processed');
     return 'unknown';
   }
