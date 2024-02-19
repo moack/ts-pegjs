@@ -6,11 +6,11 @@
   "license": "MIT",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/metadevpro/ts-pegjs/issues"
+    "url": "https://github.com/moack/ts-pegjs/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/metadevpro/ts-pegjs.git"
+    "url": "https://github.com/moack/ts-pegjs.git"
   },
   "keywords": [
     "peggy",
