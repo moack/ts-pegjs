@@ -31,10 +31,11 @@ jobs:
         with:
           node-version: 21
           registry-url: https://npm.pkg.github.com/
+          scope: "@moack"
       - run: npm ci
       - run: npm run release
       - run: |
-          npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
+          npm config set //npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN
           npm config set scope "@moack"
           npm publish
         env:
