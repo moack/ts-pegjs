@@ -1,6 +1,8 @@
 import type { ast } from 'peggy';
 import * as peggy from 'peggy';
 import prettier from 'prettier/standalone';
+import parserTypeScript from "prettier/parser-typescript";
+import prettierPluginEstree from "prettier/plugins/estree";
 import { Project, ScriptTarget, ts } from 'ts-morph';
 import { getUniqueName, isKeyword } from './get-unique-name';
 import {
@@ -99,7 +101,8 @@ export class TypeExtractor {
   formatter = async (str: string) => {
     try {
       return await prettier.format(str, {
-        parser: 'typescript'
+        parser: 'typescript',
+        plugins: [parserTypeScript, prettierPluginEstree]
       });
     } catch (e) {
       console.warn('Encountered error when formatting types with Prettier', e);
