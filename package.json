@@ -2,7 +2,7 @@
   "name": "ts-pegjs",
   "version": "4.2.2",
   "description": "TS target for peggy parser generator",
-  "author": "Pedro J. Molina",
+  "author": "moack, Pedro J. Molina",
   "license": "MIT",
   "type": "module",
   "bugs": {
