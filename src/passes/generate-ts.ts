@@ -7,7 +7,7 @@ import { COMMON_TYPES_STR } from './constants';
 // The types for `SourceNode` are currently incorrect; override them with correct types.
 type SourceNode = NonNullable<ast.Grammar['code']> & { children: (SourceNode | string)[] };
 
-export const generateParser: Config['passes']['generate'][number] = (
+export const generateParser: Config['passes']['generate'][number] = async (
   ast,
   options: TsPegjsParserBuildOptions,
   _session
@@ -24,7 +24,7 @@ export const generateParser: Config['passes']['generate'][number] = (
     camelCaseTypeNames: !options.tspegjs?.doNotCamelCaseTypes
   });
   if (!options.tspegjs?.skipTypeComputation || options.tspegjs?.onlyGenerateGrammarTypes) {
-    computedTypes = typeExtractor.getTypes({
+    computedTypes = await typeExtractor.getTypes({
       typeOverrides: options.returnTypes
     });
   }

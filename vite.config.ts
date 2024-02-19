@@ -1,5 +1,5 @@
 import viteTsconfigPaths from 'vite-tsconfig-paths';
-import rollupPluginShebang from 'rollup-plugin-add-shebang';
+//import rollupPluginShebang from 'rollup-plugin-add-shebang';
 import { defineConfig } from 'vitest/config';
 import dts from 'vite-plugin-dts';
 
@@ -10,7 +10,7 @@ import dts from 'vite-plugin-dts';
 export default defineConfig({
   plugins: [
     viteTsconfigPaths(),
-    rollupPluginShebang({ include: ['**/cli.js', '**/cli.mjs'], shebang: '#!/usr/bin/env node' }),
+    //rollupPluginShebang({ include: ['**/cli.js', '**/cli.mjs'], shebang: '#!/usr/bin/env node' }),
     dts({
       exclude: ["./src/cli.ts"]
     }),
@@ -19,6 +19,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     minify: false,
+    target: 'esnext',
     lib: { entry: ['./src/cli.ts', './src/tspegjs.ts'], formats: ['es', 'cjs'] },
     rollupOptions: { external: [/^node:/, 'peggy', 'ts-morph', /^prettier/] }
   },

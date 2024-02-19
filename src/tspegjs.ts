@@ -5,11 +5,11 @@ import { TsPegjsParserBuildOptions } from './types';
 export * from "./types";
 
 export default {
-  use(config: Config, options: TsPegjsParserBuildOptions) {
+  async use(config: Config, options: TsPegjsParserBuildOptions) {
     // We depend on the code generated being an IIF
     (options as any).format = 'bare';
 
-    config.passes.generate.push(generateParser);
+    await config.passes.generate.push(generateParser);
 
     if (!options.tspegjs) {
       options.tspegjs = {};

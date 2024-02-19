@@ -1,6 +1,5 @@
 import type { ast } from 'peggy';
 import * as peggy from 'peggy';
-import * as prettierPluginTypescript from 'prettier/parser-typescript';
 import prettier from 'prettier/standalone';
 import { Project, ScriptTarget, ts } from 'ts-morph';
 import { getUniqueName, isKeyword } from './get-unique-name';
@@ -97,11 +96,10 @@ export class TypeExtractor {
     removeReadonlyKeyword: true,
     camelCaseTypeNames: true
   };
-  formatter = (str: string) => {
+  formatter = async (str: string) => {
     try {
-      return prettier.format(str, {
-        parser: 'typescript',
-        plugins: [prettierPluginTypescript]
+      return await prettier.format(str, {
+        parser: 'typescript'
       });
     } catch (e) {
       console.warn('Encountered error when formatting types with Prettier', e);
@@ -125,16 +123,16 @@ export class TypeExtractor {
    *
    * @param typeOverrides - An object whose keys are rule names and values are types. These will override any computed type. They can be full typescript expressions (e.g. `Foo | Bar`).
    */
-  getTypes(options?: { typeOverrides?: Record<string, string> }) {
+  async getTypes(options?: { typeOverrides?: Record<string, string> }) {
     let { typeOverrides } = options || {};
 
     const file = this.project.createSourceFile('__types__.ts', TYPES_HEADER, { overwrite: true });
 
-    const ensureCached = (rule: { name: string; type: string }): { name: string; type: string } => {
+    const ensureCached = async (rule: { name: string; type: string }): Promise<{ name: string; type: string }> => {
       // Save the type in case we want to retrieve individual rules later (e.g., for testing)
       let typeCacheString = `type ${rule.name} = ${rule.type}`;
       try {
-        typeCacheString = this.formatter(typeCacheString).trim();
+        typeCacheString = (await this.formatter(typeCacheString)).trim();
         if (typeCacheString.endsWith(';')) {
           typeCacheString = typeCacheString.slice(0, typeCacheString.length - 1);
         }
@@ -148,10 +146,10 @@ export class TypeExtractor {
 
     // XXX: For some reason adding all types at once with `file.addTypeAliases()` fails
     // while adding the types one-by-one succeeds...
-    const _declarations = this.grammar.rules
-      .map((rule) => {
+    await this.grammar.rules
+      .map(async (rule) => {
         if (typeOverrides?.[rule.name]) {
-          return ensureCached({
+          return await ensureCached({
             name: rule.name,
             type: typeOverrides[rule.name]
           });
@@ -161,18 +159,18 @@ export class TypeExtractor {
           type = type.replace(/readonly\s/g, '');
         }
 
-        return ensureCached({
+        return await ensureCached({
           name: rule.name,
           type
         });
       })
-      .map((dec) => {
-        return file.addTypeAlias(dec).setIsExported(true);
+      .map(async (dec) => {
+        return file.addTypeAlias(await dec).setIsExported(true);
       });
 
     pruneCircularReferences(file);
 
-    return this.formatter(file.getFullText());
+    return await this.formatter(file.getFullText());
   }
 
   /**
@@ -229,7 +227,7 @@ export class TypeExtractor {
           }
           break;
         default: {
-          const _unused: string = type;
+          //const _unused: string = type;
           console.warn('Did not handle renaming of Peggy node with type', type);
         }
       }
@@ -418,7 +416,7 @@ export class TypeExtractor {
     // we replace those generic parameters explicitly.
     const finalType = file.addTypeAlias({
       name: 'tmpType',
-      typeParameters: labelNames.map((l, i) => ({
+      typeParameters: labelNames.map((_, i) => ({
         name: uniqueTypeParam(i)
       })),
       type: returnType.getText(func, ts.TypeFormatFlags.NoTruncation)
