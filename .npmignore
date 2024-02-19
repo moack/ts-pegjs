@@ -1,0 +1,6 @@
+# Visual Studio Settings
+.vscode
+
+# Include dist folder
+!dist/*
+!**/dist
