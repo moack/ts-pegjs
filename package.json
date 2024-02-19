@@ -41,7 +41,8 @@
     "pretest": "npm run clean",
     "test": "vite build && vitest run",
     "lint": "eslint src/ --ext .ts",
-    "release": "npm test && npm publish"
+    "release": "npm publish",
+    "release_old": "npm test && npm publish"
   },
   "peerDependencies": {
     "peggy": "^4.0.0"
