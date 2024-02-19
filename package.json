@@ -1,5 +1,5 @@
 {
-  "name": "ts-pegjs",
+  "name": "@mock/ts-pegjs",
   "version": "4.2.2",
   "description": "TS target for peggy parser generator",
   "author": "moack, Pedro J. Molina",
