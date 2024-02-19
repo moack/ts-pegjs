@@ -9,11 +9,10 @@
     "url": "https://github.com/moack/ts-pegjs/issues"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "@moack:registry": "https://npm.pkg.github.com"
   },
   "repository": {
-    "type": "git",
-    "url": "https://github.com/moack/ts-pegjs.git"
+    "url": "git://github.com/moack/ts-pegjs.git"
   },
   "keywords": [
     "peggy",
